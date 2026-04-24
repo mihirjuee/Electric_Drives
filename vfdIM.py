@@ -127,23 +127,42 @@ st.pyplot(fig2)
 # ================= CIRCUIT DIAGRAM =================
 def induction_motor_drive_circuit():
     d = schemdraw.Drawing()
-    d += elm.SourceSin().label("3ϕ AC")
-    d += elm.Line().right()
 
-    d += elm.Box(w=2, h=1).label("Rectifier")
-    d += elm.Line().right()
+    # --- 3-Phase Supply ---
+    d += elm.SourceSin().label("3ϕ Supply\n(Vs)").left()
+    d += elm.Line().right(1)
 
+    # --- Rectifier ---
+    d += elm.Box(w=2.5, h=1.2).label("Rectifier\n(AC → DC)", loc='center')
+    d += elm.Line().right(1)
+
+    # --- DC LINK ---
+    # Top line continues
     d.push()
-    d += elm.Capacitor().down().label("DC Link")
+    d += elm.Capacitor().down(1.5).label("DC Link\nC", loc='right')
     d += elm.Ground()
     d.pop()
 
-    d += elm.Line().right()
+    # Optional DC bus label
+    d += elm.Dot()
+    d += elm.Label().label("DC Bus").at((5.5, 0.6))
 
-    d += elm.Box(w=2, h=1).label("Inverter")
-    d += elm.Line().right()
+    d += elm.Line().right(1)
 
-    d += elm.Circle().label("IM")
+    # --- Inverter ---
+    d += elm.Box(w=2.5, h=1.2).label("Inverter\n(DC → AC)", loc='center')
+    d += elm.Line().right(1)
+
+    # --- Motor ---
+    d += elm.Circle().label("3ϕ IM")
+
+    # --- Bottom return path (for clarity) ---
+    d += elm.Line().down(1.5)
+    d += elm.Line().left(10)
+    d += elm.Line().up(1.5)
+
+    # --- Title ---
+    d += elm.Label().at((4.5, -2.2)).label("VFD-Fed Induction Motor Drive")
 
     return d
 
