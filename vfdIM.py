@@ -190,10 +190,11 @@ def induction_motor_drive_circuit():
 
 d = induction_motor_drive_circuit()
 
-fig, ax = plt.subplots()
-d.draw(ax=ax)
+d.draw()  # draw first
 
-st.pyplot(fig)
+fig = d.get_imagedata('png')  # get image as bytes
+
+st.image(fig)
 
 # ================= INTERPRETATION =================
 st.markdown("---")
