@@ -186,9 +186,13 @@ def induction_motor_drive_circuit():
 
     return d
 
+
+
 d = induction_motor_drive_circuit()
 
-fig = d.draw()   # ALWAYS do this
+fig, ax = plt.subplots()
+d.draw(ax=ax)
+
 st.pyplot(fig)
 
 # ================= INTERPRETATION =================
