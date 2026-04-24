@@ -127,38 +127,77 @@ plt.grid()
 st.pyplot(fig2)
 
 # ================= CIRCUIT DIAGRAM =================
-def draw_vfd_circuit():
-    # 1. Create a fresh Matplotlib figure
-    fig, ax = plt.subplots(figsize=(10, 4))
+def draw_full_vfd():
+    # 1. Setup figure
+    fig, ax = plt.subplots(figsize=(10, 6))
     
-    # 2. Initialize Drawing with the axes of the figure
+    # 2. Setup Drawing with axes canvas for Streamlit compatibility
     d = schemdraw.Drawing(canvas=ax)
+    d.config(unit=1.5)
     
-    # 3. Add elements
-    d += elm.SourceSin().label("3φ AC")
-    d += flow.Box(w=1.5, h=1).label("Rectifier")
+    # === Main Power Bus (Top and Bottom) ===
+    # Use Ic elements for the legs, which are excellent for 3-phase circuits
+    # The 'Ic' element acts like a leg/phase module.
+
+    # --- RECTIFIER LEG ---
+    # Create the Rectifier phase-leg using an Ic element with two diodes
+    leg_diode = elm.Ic(pins=[elm.IcPin(name='top', side='T'),
+                              elm.IcPin(name='bot', side='B'),
+                              elm.IcPin(name='ac', side='L')],
+                        w=0.8, h=2, leadlen=0.2)
+    # The element needs to be modified internally to contain the diodes.
+    # This is a bit advanced, but cleaner. A simpler approach is to loop
+    # standard diodes and connecting wires. Let's do that for clarity.
+
+    # --- Simpler, Correct Looping Approach ---
+    # Draw the top bus bar
+    d += elm.Line().at((0, 3)).to((8, 3)).label('+', loc='top').label('Fixed DC Voltage', loc='top', ofst=0.5)
+    d += elm.Line().at((0, 0)).to((8, 0)).label('-', loc='top') # Use a simple line for ground
+
+    # Loop to draw the 3 rectifier phases
+    for i in range(3):
+        x = i * 1.5 + 0.5
+        d.push()
+        d += elm.Line().at((x, 3)).down().length(0.2)
+        d += elm.Diode().label(f'D{i+1}', loc='bottom').down().reverse()
+        d.push()
+        d += elm.Line().left().length(1.0).label(f'L{i+1}', loc='left') if i < 3 else elm.Line().left().length(1.0)
+        d.pop()
+        d += elm.Diode().label(f'D{i+4}', loc='top').down().reverse()
+        d += elm.Line().down().length(0.2)
+        d.pop()
+
+    # Capacitor
+    d += elm.Capacitor().at((5.5, 3)).to((5.5, 0)).label('DC Link')
+
+    # Loop to draw the 3 inverter phases
+    # Using Ic module for standard inverter look
+    leg_igbt = elm.Ic(pins=[elm.IcPin(name='t', side='T'),
+                            elm.IcPin(name='b', side='B'),
+                            elm.IcPin(name='ac', side='R')],
+                        w=1.2, h=2)
+
+    for i in range(3):
+        x = i * 1.5 + 6.5
+        d += leg_igbt.at((x, 3)).label(f'Leg {i+1}') # Place it.
+
+    # Final output lines to motor
+    d += elm.Line().at((9.0, 1.5)).right().length(1.5).label('U', loc='top')
+    d += elm.Line().at((9.0, 1.0)).right().length(1.5).label('V', loc='top')
+    d += elm.Line().at((9.0, 0.5)).right().length(1.5).label('W', loc='top')
     
-    d.push()
-    d += elm.Capacitor().down().label("DC Link")
-    d += elm.Ground()
-    d.pop()
-    
-    d += flow.Box(w=1.5, h=1).label("Inverter")
-    d += elm.Motor().label("IM")
-    
-    # 4. Draw to the canvas
+    # Motor
+    d += elm.Motor().at((11, 1)).label('Motor')
+
+    # Draw and hide axes
     d.draw()
-    
-    # 5. Clean up the plot layout
-    ax.axis('off') # Hide the plot axes
+    ax.axis('off')
     return fig
 
 # --- Streamlit Display ---
-st.subheader("VFD Power Circuit")
-
-# Get the figure and pass it to Streamlit
-fig = draw_vfd_circuit()
-st.pyplot(fig)
+st.title("⚡ VFD Circuit Schematic Recreator")
+st.markdown("### Power Circuit Diagram")
+st.pyplot(draw_full_vfd())
 # ================= INTERPRETATION =================
 st.markdown("---")
 st.subheader("📘 Observations")
