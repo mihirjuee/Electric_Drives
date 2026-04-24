@@ -125,6 +125,44 @@ plt.legend()
 plt.grid()
 
 st.pyplot(fig2)
+##TORQUE-SPEED
+st.subheader("📈 Torque-Speed Characteristic")
+
+# Slip range
+s_range = np.linspace(0.001, 0.2, 200)
+
+# Slip at max torque
+s_max = 0.2
+
+# Max torque (depends on region)
+if f <= f_base:
+    T_max = T_rated
+else:
+    T_max = T_rated * (f_base / f)
+
+# Torque curve (normalized realistic shape)
+T_curve = T_max * (2 * (s_range/s_max) / ((s_range/s_max)**2 + 1))
+
+# Speed curve
+N_curve = Ns * (1 - s_range)
+
+# ================= PLOT =================
+fig = plt.figure()
+
+plt.plot(N_curve, T_curve, label="Torque-Speed Curve")
+
+# Operating point
+plt.scatter(Nr, Tl, marker='o', label="Operating Point")
+
+# Breakdown torque line
+plt.axhline(T_max, linestyle="--", label="Max Torque")
+
+plt.xlabel("Speed (RPM)")
+plt.ylabel("Torque (Nm)")
+plt.legend()
+plt.grid()
+
+st.pyplot(fig)
 
 # ================= CIRCUIT DIAGRAM =================
 def induction_motor_drive_circuit():
