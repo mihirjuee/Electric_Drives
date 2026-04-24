@@ -23,8 +23,21 @@ st.sidebar.header("🔧 Motor Parameters")
 P = st.sidebar.selectbox("Number of Poles", [2, 4, 6, 8], index=1)
 
 # Rated values (fixed)
-V_base = st.sidebar.number_input("Rated Voltage (V)", value=230.0)
-f_base = st.sidebar.number_input("Base Frequency (Hz)", value=50.0)
+V_base = st.sidebar.number_input(
+    "Rated Voltage (V)",
+    min_value=50.0,
+    max_value=1000.0,
+    value=230.0,
+    step=10.0
+)
+
+f_base = st.sidebar.number_input(
+    "Base Frequency (Hz)",
+    min_value=10.0,
+    max_value=100.0,
+    value=50.0,
+    step=1.0
+)
 
 # Control variable
 f = st.sidebar.slider("Operating Frequency (Hz)", 1.0, 100.0, 50.0)
