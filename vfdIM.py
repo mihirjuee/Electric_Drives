@@ -188,12 +188,8 @@ def induction_motor_drive_circuit():
 
 d = induction_motor_drive_circuit()
 
-try:
-    fig = d.draw()
-    st.pyplot(fig)
-except:
-    d.draw()
-    st.pyplot(d.fig)
+fig = d.draw()   # ALWAYS do this
+st.pyplot(fig)
 
 # ================= INTERPRETATION =================
 st.markdown("---")
