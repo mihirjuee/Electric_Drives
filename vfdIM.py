@@ -187,7 +187,7 @@ def draw_full_vfd():
     d += elm.Line().at((11.0, 1.5)).right().length(1.5).label('W', loc='top')
     
     # Motor
-    d += elm.Motor().at((12, 3)).label('Motor')
+    d += elm.Motor().at((13, 2)).label('Motor')
 
     # Draw and hide axes
     d.draw()
