@@ -127,40 +127,42 @@ plt.grid()
 st.pyplot(fig2)
 
 # ================= CIRCUIT DIAGRAM =================
-
-
-
 def draw_vfd_circuit():
-    # Use the Drawing object as a context manager
-    with schemdraw.Drawing() as d:
-        d.config(unit=1.5)
-        
-        # 1. AC Input
-        d += elm.SourceSin().label("3φ AC")
-        
-        # 2. Rectifier (Flow Box)
-        d += flow.Box(w=1.5, h=1).label("Rectifier")
-        
-        # 3. DC Link
-        d.push()
-        d += elm.Capacitor().down().label("DC Link")
-        d += elm.Ground()
-        d.pop()
-        
-        # 4. Inverter (Flow Box)
-        d += flow.Box(w=1.5, h=1).label("Inverter")
-        
-        # 5. Induction Motor (Correct Element)
-        d += elm.Motor().label("IM")
-        
-        return d
+    # Use the Drawing object
+    d = schemdraw.Drawing()
+    d.config(unit=1.5)
+    
+    # 1. AC Input
+    d += elm.SourceSin().label("3φ AC")
+    
+    # 2. Rectifier 
+    d += flow.Box(w=1.5, h=1).label("Rectifier")
+    
+    # 3. DC Link
+    d.push()
+    d += elm.Capacitor().down().label("DC Link")
+    d += elm.Ground()
+    d.pop()
+    
+    # 4. Inverter
+    d += flow.Box(w=1.5, h=1).label("Inverter")
+    
+    # 5. Motor
+    d += elm.Motor().label("IM")
+    
+    # Return the drawing object
+    return d
 
 # Streamlit Display
 st.subheader("VFD Power Circuit")
 
-# Render the drawing
-# Assign the drawing to a variable and pass it to st.pyplot
-fig = draw_vfd_circuit()
+# Get the drawing object
+drawing = draw_vfd_circuit()
+
+# CRITICAL FIX: Convert the drawing to a Matplotlib figure
+fig = drawing.draw()
+
+# Now pass the Matplotlib figure to Streamlit
 st.pyplot(fig)
 # ================= INTERPRETATION =================
 st.markdown("---")
