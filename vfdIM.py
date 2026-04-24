@@ -129,40 +129,39 @@ def induction_motor_drive_circuit():
     d = schemdraw.Drawing()
 
     # --- 3-Phase Supply ---
-    d += elm.SourceSin().label("3ϕ Supply\n(Vs)").left()
+    d += elm.SourceSin().label("3ϕ Supply\n(Vs)")
     d += elm.Line().right(1)
 
-    # --- Rectifier ---
-    d += elm.Rectangle(w=2.5, h=1.2).label("Rectifier\n(AC → DC)", loc='center')
+    # --- Rectifier Block (SAFE) ---
+    d += elm.Line().right(1)
+    d += elm.Dot()
+    d += elm.Line().right(0.5)
+    d += elm.Resistor().label("Rectifier\n(AC→DC)")
     d += elm.Line().right(1)
 
     # --- DC LINK ---
-    # Top line continues
     d.push()
     d += elm.Capacitor().down(1.5).label("DC Link\nC", loc='right')
     d += elm.Ground()
     d.pop()
 
-    # Optional DC bus label
     d += elm.Dot()
-    d += elm.Label().label("DC Bus").at((5.5, 0.6))
-
     d += elm.Line().right(1)
 
-    # --- Inverter ---
-    d += elm.Rectangle(w=2.5, h=1.2).label("Inverter\n(DC → AC)", loc='center')
+    # --- Inverter Block (SAFE) ---
+    d += elm.Resistor().label("Inverter\n(DC→AC)")
     d += elm.Line().right(1)
 
     # --- Motor ---
     d += elm.Circle().label("3ϕ IM")
 
-    # --- Bottom return path (for clarity) ---
+    # --- Bottom loop ---
     d += elm.Line().down(1.5)
     d += elm.Line().left(10)
     d += elm.Line().up(1.5)
 
     # --- Title ---
-    d += elm.Label().at((4.5, -2.2)).label("VFD-Fed Induction Motor Drive")
+    d += elm.Label().at((4, -2)).label("VFD Fed Induction Motor Drive")
 
     return d
 
