@@ -133,7 +133,7 @@ def induction_motor_drive_circuit():
     d += elm.Line().right(1)
 
     # --- Rectifier ---
-    d += elm.Box(w=2.5, h=1.2).label("Rectifier\n(AC → DC)", loc='center')
+    d += elm.Rectangle(w=2.5, h=1.2).label("Rectifier\n(AC → DC)", loc='center')
     d += elm.Line().right(1)
 
     # --- DC LINK ---
@@ -150,7 +150,7 @@ def induction_motor_drive_circuit():
     d += elm.Line().right(1)
 
     # --- Inverter ---
-    d += elm.Box(w=2.5, h=1.2).label("Inverter\n(DC → AC)", loc='center')
+    d += elm.Rectangle(w=2.5, h=1.2).label("Inverter\n(DC → AC)", loc='center')
     d += elm.Line().right(1)
 
     # --- Motor ---
