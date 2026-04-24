@@ -153,7 +153,8 @@ def induction_motor_drive_circuit():
     d += elm.Line().right(1)
 
     # --- Motor ---
-    d += elm.Circle().label("3ϕ IM")
+    d += elm.Circle().label("IM")
+    d += elm.Label().label("3ϕ").at((d.here[0], d.here[1] + 1))
 
     # --- Bottom loop ---
     d += elm.Line().down(1.5)
