@@ -40,7 +40,13 @@ f_base = st.sidebar.number_input(
 )
 
 # Control variable
-f = st.sidebar.slider("Operating Frequency (Hz)", 1.0, 100.0, 50.0)
+f = st.sidebar.slider(
+    "Operating Frequency (Hz)",
+    min_value=1.0,
+    max_value=100.0,
+    value=50.0,
+    step=1.0
+)
 
 # Load torque
 Tl = st.sidebar.slider("Load Torque (Nm)", 1.0, 50.0, 10.0)
