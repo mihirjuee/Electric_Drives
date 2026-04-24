@@ -158,7 +158,7 @@ def draw_full_vfd():
     for i in range(3):
         x = i * 1.5 + 0.5
         d.push()
-        d += elm.Line().at((x, 3)).down().length(0.2)
+        d += elm.Line().at((x, 3)).down().length(0.1)
         d += elm.Diode().label(f'D{i+1}', loc='bottom').down().reverse()
         d.push()
         d += elm.Line().left().length(1.0).label(f'L{i+1}', loc='left') if i < 3 else elm.Line().left().length(1.0)
