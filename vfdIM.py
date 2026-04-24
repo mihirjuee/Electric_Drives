@@ -7,14 +7,15 @@ import schemdraw.elements as elm
 # ================= PAGE =================
 st.set_page_config(page_title="Induction Motor Drive", layout="centered")
 
-st.title("⚡ Induction Motor Drive (V/f Control)")
+st.title("⚡ Induction Motor Drive (V/f Control Simulator)")
 
 st.markdown("""
-### 🔹 Realistic VFD Operation
+### 🔹 Realistic VFD-Based Induction Motor Model
 
-✔ Frequency is the control input  
-✔ Voltage is automatically adjusted (constant V/f)  
-✔ Slip depends on load torque  
+✔ Frequency controlled  
+✔ Voltage auto-adjusted (V/f control)  
+✔ Slip depends on load  
+✔ Torque-speed characteristic included  
 """)
 
 # ================= SIDEBAR =================
@@ -22,33 +23,11 @@ st.sidebar.header("🔧 Motor Parameters")
 
 P = st.sidebar.selectbox("Number of Poles", [2, 4, 6, 8], index=1)
 
-# Rated values (fixed)
-V_base = st.sidebar.number_input(
-    "Rated Voltage (V)",
-    min_value=50.0,
-    max_value=1000.0,
-    value=230.0,
-    step=10.0
-)
+V_base = st.sidebar.number_input("Rated Voltage (V)", value=230.0, step=10.0)
+f_base = st.sidebar.number_input("Base Frequency (Hz)", value=50.0, step=1.0)
 
-f_base = st.sidebar.number_input(
-    "Base Frequency (Hz)",
-    min_value=10.0,
-    max_value=100.0,
-    value=50.0,
-    step=1.0
-)
+f = st.sidebar.slider("Operating Frequency (Hz)", 1.0, 100.0, 50.0, step=1.0)
 
-# Control variable
-f = st.sidebar.slider(
-    "Operating Frequency (Hz)",
-    min_value=1.0,
-    max_value=100.0,
-    value=50.0,
-    step=1.0
-)
-
-# Load torque
 Tl = st.sidebar.slider("Load Torque (Nm)", 1.0, 50.0, 10.0)
 
 # ================= V/f CONTROL =================
@@ -62,13 +41,29 @@ vf_ratio = V / f
 # ================= SPEED =================
 Ns = 120 * f / P
 
-# ================= SLIP FROM LOAD =================
-T_rated = 20  # tuning parameter
+# ================= SLIP MODEL =================
+s_base = 0.03
+T_rated = 20
 
-slip = 0.02 + 0.08 * (Tl / T_rated)
-slip = min(max(slip, 0.005), 0.1)
+load_factor = Tl / T_rated
+
+if f <= f_base:
+    slip = s_base * load_factor
+else:
+    slip = s_base * load_factor * (f / f_base)
+
+slip = np.clip(slip, 0.005, 0.2)
 
 Nr = Ns * (1 - slip)
+
+# ================= TORQUE CAPABILITY =================
+if f <= f_base:
+    T_max = T_rated
+else:
+    T_max = T_rated * (f_base / f)
+
+# ================= OVERLOAD =================
+overload = Tl > T_max
 
 # ================= DISPLAY =================
 st.subheader("📊 Motor Performance")
@@ -85,8 +80,11 @@ with col3:
     st.metric("Slip", f"{slip:.4f}")
 
 st.metric("Load Torque (Nm)", f"{Tl:.2f}")
-st.metric("Operating Voltage", f"{V:.2f}")
+st.metric("Operating Voltage (V)", f"{V:.2f}")
 st.metric("V/f Ratio", f"{vf_ratio:.2f}")
+
+if overload:
+    st.error("⚠️ Overload! Load exceeds motor capability → Risk of stall")
 
 # ================= SPEED GRAPH =================
 st.subheader("📈 Speed vs Frequency")
@@ -125,36 +123,20 @@ plt.legend()
 plt.grid()
 
 st.pyplot(fig2)
-##TORQUE-SPEED
+
+# ================= TORQUE-SPEED CURVE =================
 st.subheader("📈 Torque-Speed Characteristic")
 
-# Slip range
 s_range = np.linspace(0.001, 0.2, 200)
-
-# Slip at max torque
 s_max = 0.2
 
-# Max torque (depends on region)
-if f <= f_base:
-    T_max = T_rated
-else:
-    T_max = T_rated * (f_base / f)
-
-# Torque curve (normalized realistic shape)
 T_curve = T_max * (2 * (s_range/s_max) / ((s_range/s_max)**2 + 1))
-
-# Speed curve
 N_curve = Ns * (1 - s_range)
 
-# ================= PLOT =================
-fig = plt.figure()
+fig3 = plt.figure()
 
 plt.plot(N_curve, T_curve, label="Torque-Speed Curve")
-
-# Operating point
-plt.scatter(Nr, Tl, marker='o', label="Operating Point")
-
-# Breakdown torque line
+plt.scatter(Nr, Tl, label="Operating Point")
 plt.axhline(T_max, linestyle="--", label="Max Torque")
 
 plt.xlabel("Speed (RPM)")
@@ -162,7 +144,7 @@ plt.ylabel("Torque (Nm)")
 plt.legend()
 plt.grid()
 
-st.pyplot(fig)
+st.pyplot(fig3)
 
 # ================= CIRCUIT DIAGRAM =================
 def induction_motor_drive_circuit():
@@ -198,22 +180,15 @@ st.markdown("---")
 st.subheader("📘 Observations")
 
 st.write("""
-✔ Frequency ↑ → Speed ↑  
-✔ Load ↑ → Slip ↑ → Speed ↓  
-
 ✔ Below base frequency → constant torque region  
-✔ Above base frequency → field weakening region  
+✔ Above base frequency → field weakening (torque decreases)  
 
-✔ Voltage is NOT controlled manually → derived from V/f
-""")
+✔ Load ↑ → Slip ↑ → Speed ↓  
+✔ Frequency ↑ → Speed ↑  
 
-# ================= INSIGHT =================
-st.info("""
-💡 Key Concept:
+✔ Overload → motor may stall  
 
-Ns = 120f / P
-
-Slip is not an input — it adjusts automatically with load torque.
+👉 Torque-speed curve shows operating point clearly
 """)
 
 st.success("Simulation Complete ✅")
