@@ -7,7 +7,7 @@ from schemdraw import flow
 
 
 # ================= PAGE =================
-st.set_page_config(page_title="Induction Motor Drive", layout="centered")
+st.set_page_config(page_title="Induction Motor Drive", page_icon="logo.png", layout="centered")
 
 st.title("⚡ Induction Motor Drive (V/f Control Simulator)")
 
