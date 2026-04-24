@@ -178,7 +178,7 @@ def draw_full_vfd():
                         w=1.2, h=2)
 
     for i in range(3):
-        x = i * 1.5 + 4.5
+        x = i * 1.5 + 5.5
         d += leg_igbt.at((x, 3)).label(f'Leg {i+1}') # Place it.
 
     # Final output lines to motor
@@ -187,7 +187,7 @@ def draw_full_vfd():
     d += elm.Line().at((9.0, 0.5)).right().length(1.5).label('W', loc='top')
     
     # Motor
-    d += elm.Motor().at((11, 1)).label('Motor')
+    d += elm.Motor().at((13, 1)).label('Motor')
 
     # Draw and hide axes
     d.draw()
