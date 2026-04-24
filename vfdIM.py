@@ -124,28 +124,6 @@ plt.grid()
 
 st.pyplot(fig2)
 
-# ================= TORQUE-SPEED CURVE =================
-st.subheader("📈 Torque-Speed Characteristic")
-
-s_range = np.linspace(0.001, 0.2, 200)
-s_max = 0.2
-
-T_curve = T_max * (2 * (s_range/s_max) / ((s_range/s_max)**2 + 1))
-N_curve = Ns * (1 - s_range)
-
-fig3 = plt.figure()
-
-plt.plot(N_curve, T_curve, label="Torque-Speed Curve")
-plt.scatter(Nr, Tl, label="Operating Point")
-plt.axhline(T_max, linestyle="--", label="Max Torque")
-
-plt.xlabel("Speed (RPM)")
-plt.ylabel("Torque (Nm)")
-plt.legend()
-plt.grid()
-
-st.pyplot(fig3)
-
 # ================= CIRCUIT DIAGRAM =================
 def induction_motor_drive_circuit():
     d = schemdraw.Drawing()
@@ -188,7 +166,6 @@ st.write("""
 
 ✔ Overload → motor may stall  
 
-👉 Torque-speed curve shows operating point clearly
 """)
 
 st.success("Simulation Complete ✅")
