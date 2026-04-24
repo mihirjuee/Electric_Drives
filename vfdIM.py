@@ -82,10 +82,10 @@ with col2:
     st.metric("Rotor Speed (RPM)", f"{Nr:.1f}")
 
 with col3:
-    st.metric("Slip (auto)", f"{slip:.4f}")
+    st.metric("Slip", f"{slip:.4f}")
 
 st.metric("Load Torque (Nm)", f"{Tl:.2f}")
-st.metric("Operating Voltage (Auto)", f"{V:.2f}")
+st.metric("Operating Voltage", f"{V:.2f}")
 st.metric("V/f Ratio", f"{vf_ratio:.2f}")
 
 # ================= SPEED GRAPH =================
