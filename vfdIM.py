@@ -127,7 +127,6 @@ st.pyplot(fig2)
 # ================= CIRCUIT DIAGRAM =================
 def induction_motor_drive_circuit():
     d = schemdraw.Drawing()
-
     d += elm.SourceSin().label("3ϕ AC")
     d += elm.Line().right()
 
@@ -151,7 +150,14 @@ def induction_motor_drive_circuit():
 st.markdown("---")
 st.subheader("⚙️ Induction Motor Drive Circuit")
 
-st.pyplot(induction_motor_drive_circuit().draw().fig)
+d = induction_motor_drive_circuit()
+
+try:
+    fig = d.draw()
+    st.pyplot(fig)
+except:
+    d.draw()
+    st.pyplot(d.fig)
 
 # ================= INTERPRETATION =================
 st.markdown("---")
