@@ -125,77 +125,37 @@ plt.grid()
 st.pyplot(fig2)
 
 # ================= CIRCUIT DIAGRAM =================
-def induction_motor_drive_circuit():
-    d = schemdraw.Drawing()
+import streamlit as st
+import schemdraw
+from schemdraw import flow
+import schemdraw.elements as elm
 
-    # ================= 3-PHASE SOURCE =================
-    d += elm.SourceSin().label("3ϕ AC Supply\n(Vs)")
-    d += elm.Line().right(1)
+def draw_vfd_circuit():
+    with schemdraw.Drawing() as d:
+        d.config(unit=1.5)
+        
+        # AC Input
+        d += elm.SourceSin().label("3φ AC")
+        
+        # Rectifier
+        d += flow.Box(w=1.5, h=1).label("Rectifier")
+        
+        # DC Link (Capacitor)
+        d.push()
+        d += elm.Capacitor().down().label("DC Link")
+        d += elm.Ground()
+        d.pop()
+        
+        # Inverter
+        d += flow.Box(w=1.5, h=1).label("Inverter")
+        
+        # Motor
+        d += elm.Circle().label("IM")
+        
+        return d
 
-    # ================= RECTIFIER =================
-    d += elm.Resistor().label("Rectifier\n(AC → DC)")
-    d += elm.Line().right(1)
-
-    # ================= DC LINK =================
-    # Top bus
-    d += elm.Dot()
-    
-    # Capacitor branch
-    d.push()
-    d += elm.Capacitor().down(1.5).label("DC Link Capacitor", loc='right')
-    d += elm.Ground()
-    d.pop()
-
-    # Label DC bus
-    d += elm.Label().label("DC Bus").at((d.here[0], d.here[1] + 0.8))
-
-    d += elm.Line().right(1)
-
-    # ================= INVERTER =================
-    d += elm.Resistor().label("Inverter\n(DC → AC)")
-    d += elm.Line().right(1)
-
-    # ================= MOTOR =================
-    # Draw circle manually (version-safe)
-    d += elm.Dot()
-    
-    d.push()
-    d += elm.Line().up(0.6)
-    d += elm.Line().right(0.6)
-    d += elm.Line().down(1.2)
-    d += elm.Line().left(1.2)
-    d += elm.Line().up(1.2)
-    d += elm.Line().right(0.6)
-    d.pop()
-
-    # Motor label
-    d += elm.Label().label("IM").at((d.here[0]+0.3, d.here[1]))
-    d += elm.Label().label("3ϕ Induction Motor").at((d.here[0]-1, d.here[1]+1))
-
-    # Shaft
-    d += elm.Line().right(0.8)
-    d += elm.Arrow().right(0.5)
-
-    # ================= RETURN PATH =================
-    d += elm.Line().down(1.5)
-    d += elm.Line().left(10)
-    d += elm.Line().up(1.5)
-
-    # ================= TITLE =================
-    d += elm.Label().at((4, -2)).label("VFD-Fed Induction Motor Drive (Textbook Model)")
-
-    return d
-
-
-
-d = induction_motor_drive_circuit()
-
-d.draw()  # draw first
-
-fig = d.get_imagedata('png')  # get image as bytes
-
-st.image(fig)
-
+st.subheader("VFD Power Circuit")
+st.pyplot(draw_vfd_circuit().draw())
 # ================= INTERPRETATION =================
 st.markdown("---")
 st.subheader("📘 Observations")
