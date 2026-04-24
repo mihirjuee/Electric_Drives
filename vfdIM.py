@@ -7,14 +7,14 @@ import schemdraw.elements as elm
 # ================= PAGE =================
 st.set_page_config(page_title="Induction Motor Drive", layout="centered")
 
-st.title("⚡ Induction Motor Drive (V/f Control Simulator)")
+st.title("⚡ Induction Motor Drive (V/f Control)")
 
 st.markdown("""
-### 🔹 Realistic VFD-Based Control
+### 🔹 Realistic VFD Operation
 
-✔ Frequency is controlled  
-✔ Voltage automatically adjusted (constant V/f)  
-✔ Slip is NOT input → it varies with load  
+✔ Frequency is the control input  
+✔ Voltage is automatically adjusted (constant V/f)  
+✔ Slip depends on load torque  
 """)
 
 # ================= SIDEBAR =================
@@ -22,37 +22,34 @@ st.sidebar.header("🔧 Motor Parameters")
 
 P = st.sidebar.selectbox("Number of Poles", [2, 4, 6, 8], index=1)
 
-# Base values
-V_base = st.sidebar.number_input("Base Voltage (V)", value=230.0)
+# Rated values (fixed)
+V_base = st.sidebar.number_input("Rated Voltage (V)", value=230.0)
 f_base = st.sidebar.number_input("Base Frequency (Hz)", value=50.0)
 
 # Control variable
 f = st.sidebar.slider("Operating Frequency (Hz)", 1.0, 100.0, 50.0)
 
-# Load torque (NEW)
+# Load torque
 Tl = st.sidebar.slider("Load Torque (Nm)", 1.0, 50.0, 10.0)
 
 # ================= V/f CONTROL =================
 if f <= f_base:
     V = (V_base / f_base) * f
 else:
-    V = V_base  # field weakening region
+    V = V_base  # field weakening
 
 vf_ratio = V / f
 
-# ================= SLIP CALCULATION =================
-# simple proportional model
-k = 0.02  # tuning factor
-
-slip = k * (Tl * f) / (V**2 + 1e-6)
-slip = min(max(slip, 0.001), 0.1)  # limit realistic range
-
-# ================= MOTOR SPEED =================
+# ================= SPEED =================
 Ns = 120 * f / P
-Nr = Ns * (1 - slip)
 
-# torque display (equal to load torque in steady state)
-T = Tl
+# ================= SLIP FROM LOAD =================
+T_rated = 20  # tuning parameter
+
+slip = 0.02 + 0.08 * (Tl / T_rated)
+slip = min(max(slip, 0.005), 0.1)
+
+Nr = Ns * (1 - slip)
 
 # ================= DISPLAY =================
 st.subheader("📊 Motor Performance")
@@ -69,7 +66,7 @@ with col3:
     st.metric("Slip (auto)", f"{slip:.4f}")
 
 st.metric("Load Torque (Nm)", f"{Tl:.2f}")
-st.metric("Adjusted Voltage (V)", f"{V:.2f}")
+st.metric("Operating Voltage (Auto)", f"{V:.2f}")
 st.metric("V/f Ratio", f"{vf_ratio:.2f}")
 
 # ================= SPEED GRAPH =================
@@ -144,21 +141,22 @@ st.markdown("---")
 st.subheader("📘 Observations")
 
 st.write("""
-✔ Load ↑ → Slip ↑ → Speed ↓  
 ✔ Frequency ↑ → Speed ↑  
-✔ Constant V/f → constant flux  
+✔ Load ↑ → Slip ↑ → Speed ↓  
 
 ✔ Below base frequency → constant torque region  
 ✔ Above base frequency → field weakening region  
+
+✔ Voltage is NOT controlled manually → derived from V/f
 """)
 
 # ================= INSIGHT =================
 st.info("""
 💡 Key Concept:
 
-Slip is NOT controlled manually.
+Ns = 120f / P
 
-Motor automatically adjusts slip to match load torque.
+Slip is not an input — it adjusts automatically with load torque.
 """)
 
 st.success("Simulation Complete ✅")
