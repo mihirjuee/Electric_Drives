@@ -128,41 +128,36 @@ st.pyplot(fig2)
 
 # ================= CIRCUIT DIAGRAM =================
 def draw_vfd_circuit():
-    # Use the Drawing object
-    d = schemdraw.Drawing()
-    d.config(unit=1.5)
+    # 1. Create a fresh Matplotlib figure
+    fig, ax = plt.subplots(figsize=(10, 4))
     
-    # 1. AC Input
+    # 2. Initialize Drawing with the axes of the figure
+    d = schemdraw.Drawing(canvas=ax)
+    
+    # 3. Add elements
     d += elm.SourceSin().label("3φ AC")
-    
-    # 2. Rectifier 
     d += flow.Box(w=1.5, h=1).label("Rectifier")
     
-    # 3. DC Link
     d.push()
     d += elm.Capacitor().down().label("DC Link")
     d += elm.Ground()
     d.pop()
     
-    # 4. Inverter
     d += flow.Box(w=1.5, h=1).label("Inverter")
-    
-    # 5. Motor
     d += elm.Motor().label("IM")
     
-    # Return the drawing object
-    return d
+    # 4. Draw to the canvas
+    d.draw()
+    
+    # 5. Clean up the plot layout
+    ax.axis('off') # Hide the plot axes
+    return fig
 
-# Streamlit Display
+# --- Streamlit Display ---
 st.subheader("VFD Power Circuit")
 
-# Get the drawing object
-drawing = draw_vfd_circuit()
-
-# CRITICAL FIX: Convert the drawing to a Matplotlib figure
-fig = drawing.draw()
-
-# Now pass the Matplotlib figure to Streamlit
+# Get the figure and pass it to Streamlit
+fig = draw_vfd_circuit()
 st.pyplot(fig)
 # ================= INTERPRETATION =================
 st.markdown("---")
