@@ -3,6 +3,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 import schemdraw
 import schemdraw.elements as elm
+from schemdraw import flow
+
 
 # ================= PAGE =================
 st.set_page_config(page_title="Induction Motor Drive", layout="centered")
@@ -125,37 +127,41 @@ plt.grid()
 st.pyplot(fig2)
 
 # ================= CIRCUIT DIAGRAM =================
-import streamlit as st
-import schemdraw
-from schemdraw import flow
-import schemdraw.elements as elm
+
+
 
 def draw_vfd_circuit():
+    # Use the Drawing object as a context manager
     with schemdraw.Drawing() as d:
         d.config(unit=1.5)
         
-        # AC Input
+        # 1. AC Input
         d += elm.SourceSin().label("3φ AC")
         
-        # Rectifier
+        # 2. Rectifier (Flow Box)
         d += flow.Box(w=1.5, h=1).label("Rectifier")
         
-        # DC Link (Capacitor)
+        # 3. DC Link
         d.push()
         d += elm.Capacitor().down().label("DC Link")
         d += elm.Ground()
         d.pop()
         
-        # Inverter
+        # 4. Inverter (Flow Box)
         d += flow.Box(w=1.5, h=1).label("Inverter")
         
-        # Motor
-        d += elm.Circle().label("IM")
+        # 5. Induction Motor (Correct Element)
+        d += elm.Motor().label("IM")
         
         return d
 
+# Streamlit Display
 st.subheader("VFD Power Circuit")
-st.pyplot(draw_vfd_circuit().draw())
+
+# Render the drawing
+# Assign the drawing to a variable and pass it to st.pyplot
+fig = draw_vfd_circuit()
+st.pyplot(fig)
 # ================= INTERPRETATION =================
 st.markdown("---")
 st.subheader("📘 Observations")
