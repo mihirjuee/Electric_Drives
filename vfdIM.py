@@ -178,7 +178,7 @@ def draw_full_vfd():
                         w=1.2, h=2)
 
     for i in range(3):
-        x = i * 1.5 + 6.5
+        x = i * 1.5 + 4.5
         d += leg_igbt.at((x, 3)).label(f'Leg {i+1}') # Place it.
 
     # Final output lines to motor
