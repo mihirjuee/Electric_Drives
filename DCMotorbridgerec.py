@@ -70,9 +70,9 @@ with schemdraw.Drawing() as d:
 st.pyplot(fig_circuit)
 
 # ================= WAVEFORMS =================
-st.subheader("📈 Waveforms")
-
 t = np.linspace(0, 2*np.pi, 1000)
+theta_deg = np.degrees(t)
+
 vs = Vm * np.sin(t)
 
 vout = np.zeros_like(t)
@@ -89,16 +89,16 @@ for i in range(len(t)):
 
 fig, ax = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
-# Input
-ax[0].plot(t, vs)
+# Input voltage
+ax[0].plot(theta_deg, vs)
 ax[0].set_title("Input AC Voltage")
 ax[0].set_ylabel("Voltage (V)")
 ax[0].grid()
 
-# Output
-ax[1].plot(t, vout, color='red')
+# Output voltage
+ax[1].plot(theta_deg, vout, color='red')
 ax[1].set_title("Converter Output Voltage")
-ax[1].set_xlabel("Electrical Angle (rad)")
+ax[1].set_xlabel("Electrical Angle (°)")
 ax[1].set_ylabel("Voltage (V)")
 ax[1].grid()
 
