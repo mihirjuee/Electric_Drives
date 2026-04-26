@@ -57,8 +57,12 @@ with schemdraw.Drawing() as d:
     d += elm.Diode().down().label("T4").reverse()
     d += elm.Line().right()
     d += elm.Diode().up().label("T3")
-
-
+    d.push()
+    d += elm.Line().left()
+    d += elm.Line().down()
+    d += elm.Line().left()
+    d.pop()
+    d += elm.Line().up()
     fig_circuit = d.draw().fig
 
 st.pyplot(fig_circuit)
