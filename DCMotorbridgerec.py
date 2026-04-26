@@ -36,12 +36,12 @@ with schemdraw.Drawing() as d:
     # AC source
     d += elm.SourceSin().label("AC")
     d += elm.Line().right()
-
+    d.push()
     # Bridge left leg
     d.push()
     d += elm.Diode().up().label("T1")
     d += elm.Line().right()
-  
+    d.pop()
     d += elm.Diode().down().label("T2").reverse()
     d.pop()
     d += elm.Line().right()
@@ -53,7 +53,7 @@ with schemdraw.Drawing() as d:
     d += elm.Line().down(2)
 
     # Bridge right leg
-    d.push()
+
     d += elm.Diode().down().label("T4").reverse()
     d += elm.Line().right()
     d += elm.Diode().up().label("T3")
