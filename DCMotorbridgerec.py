@@ -41,9 +41,12 @@ with schemdraw.Drawing() as d:
     d.push()
     d += elm.Diode().up().label("T1")
     d += elm.Line().right()
+    d.push()
     d += elm.Diode().down().label("T2").reverse()
     d.pop()
-
+    d += elm.Resistor().down().label("Ra")
+    d += elm.SourceV().up().label("Eb")
+    d.pop()
     d += elm.Line().down(2)
 
     # Bridge right leg
@@ -58,8 +61,8 @@ with schemdraw.Drawing() as d:
     # Motor load
     d.push()
     d += elm.Line().right(2)
-    d += elm.SourceV().up().label("Eb")
-    d += elm.Resistor().up().label("Ra")
+    
+    
     
     
     d.pop()
