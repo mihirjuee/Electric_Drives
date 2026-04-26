@@ -47,6 +47,8 @@ with schemdraw.Drawing() as d:
     d += elm.Line().right()
     d += elm.Resistor().down().label("Ra")
     d += elm.SourceV().down().label("Eb")
+    d += elm.Line().down()
+    d += elm.Line().left()
     d.pop()
     d += elm.Line().down(2)
 
