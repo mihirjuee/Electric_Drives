@@ -112,7 +112,8 @@ c1, c2, c3 = st.columns(3)
 
 c1.metric("DC Output Voltage", f"{Vdc:.2f} V")
 c2.metric("Armature Current", f"{Ia:.2f} A")
-c3.metric("Motor Speed", f"{omega:.2f} rad/s")
+rpm = omega * 60 / (2 * np.pi)
+c3.metric("Motor Speed", f"{rpm:.2f} RPM")
 
 # ================= INSIGHT =================
 st.info(
