@@ -48,9 +48,9 @@ with schemdraw.Drawing() as d:
 
     # Bridge right leg
     d.push()
-    d += elm.Diode().down().label("T3")
+    d += elm.Diode().down().label("T4").reverse()
     d += elm.Line().right()
-    d += elm.Diode().up().label("T4")
+    d += elm.Diode().up().label("T3")
     d.pop()
 
     d += elm.Line().right(3)
