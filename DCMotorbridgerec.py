@@ -41,7 +41,7 @@ with schemdraw.Drawing() as d:
     d.push()
     d += elm.Diode().up().label("T1")
     d += elm.Line().right()
-    d.push()
+  
     d += elm.Diode().down().label("T2").reverse()
     d.pop()
     d += elm.Line().right()
@@ -57,7 +57,6 @@ with schemdraw.Drawing() as d:
     d += elm.Diode().down().label("T4").reverse()
     d += elm.Line().right()
     d += elm.Diode().up().label("T3")
-    d.pop()
 
 
     fig_circuit = d.draw().fig
