@@ -57,6 +57,7 @@ with schemdraw.Drawing() as d:
 
     # Motor load
     d.push()
+    d += elm.Line().right(2)
     d += elm.Resistor().down().label("Ra")
     d += elm.SourceV().down().label("Eb")
     d += elm.Ground()
