@@ -70,37 +70,40 @@ with schemdraw.Drawing() as d:
 st.pyplot(fig_circuit)
 
 # ================= WAVEFORMS =================
-t = np.linspace(0, 2*np.pi, 1000)
 theta_deg = np.degrees(t)
-
-vs = Vm * np.sin(t)
-
-vout = np.zeros_like(t)
-
-for i in range(len(t)):
-    theta = t[i] % (2*np.pi)
-
-    if alpha <= theta <= np.pi:
-        vout[i] = Vm * np.sin(theta)
-    elif np.pi + alpha <= theta <= 2*np.pi:
-        vout[i] = -Vm * np.sin(theta)
-    else:
-        vout[i] = 0
+alpha_deg = np.degrees(alpha)
 
 fig, ax = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
-# Input voltage
+# ================= INPUT =================
 ax[0].plot(theta_deg, vs)
 ax[0].set_title("Input AC Voltage")
 ax[0].set_ylabel("Voltage (V)")
 ax[0].grid()
 
-# Output voltage
+# Mark firing angles on input
+ax[0].axvline(alpha_deg, linestyle='--')
+ax[0].axvline(180 + alpha_deg, linestyle='--')
+
+ax[0].text(alpha_deg, Vm*0.8, f'α = {alpha_deg:.0f}°')
+ax[0].text(180 + alpha_deg, Vm*0.8, f'π+α')
+
+# ================= OUTPUT =================
 ax[1].plot(theta_deg, vout, color='red')
 ax[1].set_title("Converter Output Voltage")
 ax[1].set_xlabel("Electrical Angle (°)")
 ax[1].set_ylabel("Voltage (V)")
 ax[1].grid()
+
+# Mark firing angles on output
+ax[1].axvline(alpha_deg, linestyle='--')
+ax[1].axvline(180 + alpha_deg, linestyle='--')
+
+ax[1].text(alpha_deg, Vm*0.5, 'T1,T2 ON')
+ax[1].text(180 + alpha_deg, Vm*0.5, 'T3,T4 ON')
+
+# Clean ticks
+ax[1].set_xticks([0, 90, 180, 270, 360])
 
 plt.tight_layout()
 st.pyplot(fig)
