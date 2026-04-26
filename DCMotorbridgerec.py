@@ -121,3 +121,9 @@ st.info(
     "which reduces motor speed. At α = 90°, output voltage ≈ 0. "
     "Above 90°, the converter enters inversion mode."
 )
+
+st.warning(
+    "⚠️ Model Assumption: Armature inductance (La) is not considered. "
+    "Current is assumed instantaneous (Ia = Vdc / Ra). "
+    "In practical DC motors, inductance smooths current and affects dynamics."
+)
