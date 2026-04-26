@@ -46,7 +46,7 @@ with schemdraw.Drawing() as d:
     d.pop()
     d += elm.Line().right()
     d += elm.Resistor().down().label("Ra")
-    d += elm.SourceV().up().label("Eb")
+    d += elm.SourceV().down().label("Eb")
     d.pop()
     d += elm.Line().down(2)
 
@@ -60,13 +60,6 @@ with schemdraw.Drawing() as d:
     d += elm.Line().right(3)
 
     # Motor load
-    d.push()
-    d += elm.Line().right(2)
-    
-    
-    
-    
-    d.pop()
 
     fig_circuit = d.draw().fig
 
