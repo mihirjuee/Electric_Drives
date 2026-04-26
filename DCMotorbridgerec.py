@@ -77,35 +77,48 @@ fig, ax = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
 # ================= INPUT =================
 ax[0].plot(theta_deg, vs)
+
 ax[0].set_title("Input AC Voltage")
 ax[0].set_ylabel("Voltage (V)")
-ax[0].grid()
+ax[0].grid(True)
 
-# Mark firing angles on input
-ax[0].axvline(alpha_deg, linestyle='--')
-ax[0].axvline(180 + alpha_deg, linestyle='--')
+# Dynamic limits
+ymax = np.max(vs)
 
-ax[0].text(alpha_deg, Vm*0.8, f'α = {alpha_deg:.0f}°')
-ax[0].text(180 + alpha_deg, Vm*0.8, f'π+α')
+# Mark firing angles
+ax[0].axvline(alpha_deg, linestyle='--', linewidth=1)
+ax[0].axvline(180 + alpha_deg, linestyle='--', linewidth=1)
+
+# Labels (position-safe)
+ax[0].text(alpha_deg + 2, ymax*0.8, f'α = {alpha_deg:.0f}°')
+ax[0].text(180 + alpha_deg + 2, ymax*0.8, 'π + α')
 
 # ================= OUTPUT =================
-ax[1].plot(theta_deg, vout, color='red')
+ax[1].plot(theta_deg, vout)
+
 ax[1].set_title("Converter Output Voltage")
 ax[1].set_xlabel("Electrical Angle (°)")
 ax[1].set_ylabel("Voltage (V)")
-ax[1].grid()
+ax[1].grid(True)
 
-# Mark firing angles on output
-ax[1].axvline(alpha_deg, linestyle='--')
-ax[1].axvline(180 + alpha_deg, linestyle='--')
+# Mark firing angles
+ax[1].axvline(alpha_deg, linestyle='--', linewidth=1)
+ax[1].axvline(180 + alpha_deg, linestyle='--', linewidth=1)
 
-ax[1].text(alpha_deg, Vm*0.5, 'T1,T2 ON')
-ax[1].text(180 + alpha_deg, Vm*0.5, 'T3,T4 ON')
+# Conduction region shading (VERY IMPORTANT)
+ax[1].axvspan(alpha_deg, 180, alpha=0.2)
+ax[1].axvspan(180 + alpha_deg, 360, alpha=0.2)
 
-# Clean ticks
+# Label positions based on output waveform
+yout_max = np.max(vout)
+
+ax[1].text(alpha_deg + 5, yout_max*0.6, 'T1,T2 ON')
+ax[1].text(180 + alpha_deg + 5, yout_max*0.6, 'T3,T4 ON')
+
+# Clean degree ticks
 ax[1].set_xticks([0, 90, 180, 270, 360])
 
-plt.tight_layout()
+plt.tight_layout(h_pad=2)
 st.pyplot(fig)
 
 # ================= RESULTS =================
