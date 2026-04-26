@@ -5,7 +5,7 @@ import schemdraw
 import schemdraw.elements as elm
 
 # ================= PAGE =================
-st.set_page_config(page_title="DC Motor Control", layout="wide")
+st.set_page_config(page_title="DC Motor Control", page_icon="logo.png", layout="wide")
 st.title("⚡ DC Motor Control using Full Bridge Converter")
 
 st.latex(r"V_{dc} = \frac{2V_m}{\pi} \cos(\alpha)")
