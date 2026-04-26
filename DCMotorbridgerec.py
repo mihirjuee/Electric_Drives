@@ -53,7 +53,7 @@ with schemdraw.Drawing() as d:
     d += elm.Diode().up().label("T4")
     d.pop()
 
-    d += elm.Line().right()
+    d += elm.Line().right(3)
 
     # Motor load
     d.push()
