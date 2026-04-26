@@ -44,6 +44,7 @@ with schemdraw.Drawing() as d:
     d.push()
     d += elm.Diode().down().label("T2").reverse()
     d.pop()
+    d += elm.Line().right()
     d += elm.Resistor().down().label("Ra")
     d += elm.SourceV().up().label("Eb")
     d.pop()
