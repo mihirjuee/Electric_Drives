@@ -70,6 +70,7 @@ with schemdraw.Drawing() as d:
 st.pyplot(fig_circuit)
 
 # ================= WAVEFORMS =================
+st.subheader("📈 Waveforms")
 t = np.linspace(0, 2*np.pi, 1000)
 theta_deg = np.degrees(t)
 
