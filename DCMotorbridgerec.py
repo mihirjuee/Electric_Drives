@@ -70,57 +70,40 @@ with schemdraw.Drawing() as d:
 st.pyplot(fig_circuit)
 
 # ================= WAVEFORMS =================
+t = np.linspace(0, 2*np.pi, 1000)
 theta_deg = np.degrees(t)
-alpha_deg = np.degrees(alpha)
+
+vs = Vm * np.sin(t)
+
+vout = np.zeros_like(t)
+
+for i in range(len(t)):
+    theta = t[i] % (2*np.pi)
+
+    if alpha <= theta <= np.pi:
+        vout[i] = Vm * np.sin(theta)
+    elif np.pi + alpha <= theta <= 2*np.pi:
+        vout[i] = -Vm * np.sin(theta)
+    else:
+        vout[i] = 0
 
 fig, ax = plt.subplots(2, 1, figsize=(10, 6), sharex=True)
 
-# ================= INPUT =================
+# Input voltage
 ax[0].plot(theta_deg, vs)
-
 ax[0].set_title("Input AC Voltage")
 ax[0].set_ylabel("Voltage (V)")
-ax[0].grid(True)
+ax[0].grid()
 
-# Dynamic limits
-ymax = np.max(vs)
-
-# Mark firing angles
-ax[0].axvline(alpha_deg, linestyle='--', linewidth=1)
-ax[0].axvline(180 + alpha_deg, linestyle='--', linewidth=1)
-
-# Labels (position-safe)
-ax[0].text(alpha_deg + 2, ymax*0.8, f'α = {alpha_deg:.0f}°')
-ax[0].text(180 + alpha_deg + 2, ymax*0.8, 'π + α')
-
-# ================= OUTPUT =================
-ax[1].plot(theta_deg, vout)
-
+# Output voltage
+ax[1].plot(theta_deg, vout, color='red')
 ax[1].set_title("Converter Output Voltage")
 ax[1].set_xlabel("Electrical Angle (°)")
 ax[1].set_ylabel("Voltage (V)")
-ax[1].grid(True)
+ax[1].grid()
 
-# Mark firing angles
-ax[1].axvline(alpha_deg, linestyle='--', linewidth=1)
-ax[1].axvline(180 + alpha_deg, linestyle='--', linewidth=1)
-
-# Conduction region shading (VERY IMPORTANT)
-ax[1].axvspan(alpha_deg, 180, alpha=0.2)
-ax[1].axvspan(180 + alpha_deg, 360, alpha=0.2)
-
-# Label positions based on output waveform
-yout_max = np.max(vout)
-
-ax[1].text(alpha_deg + 5, yout_max*0.6, 'T1,T2 ON')
-ax[1].text(180 + alpha_deg + 5, yout_max*0.6, 'T3,T4 ON')
-
-# Clean degree ticks
-ax[1].set_xticks([0, 90, 180, 270, 360])
-
-plt.tight_layout(h_pad=2)
+plt.tight_layout()
 st.pyplot(fig)
-
 # ================= RESULTS =================
 st.subheader("📊 Motor Performance")
 
