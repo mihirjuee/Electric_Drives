@@ -41,7 +41,7 @@ with schemdraw.Drawing() as d:
     d.push()
     d += elm.Diode().up().label("T1")
     d += elm.Line().right()
-    d.pop()
+    d.push()
     d += elm.Diode().down().label("T2").reverse()
     d.pop()
     d += elm.Line().right()
