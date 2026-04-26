@@ -44,7 +44,7 @@ with schemdraw.Drawing() as d:
     d += elm.Diode().down().label("T2")
     d.pop()
 
-    d += elm.Line().right(2)
+    d += elm.Line().down(2)
 
     # Bridge right leg
     d.push()
