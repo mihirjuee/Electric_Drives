@@ -16,13 +16,13 @@ st.title("⚙️ Four Quadrant Operation of Hoist")
 
 st.markdown("""
 ### Features
-- Common Torque-Speed axis
-- Four quadrant hoist operation
-- Moving loaded/empty cage
+- Simultaneous four quadrant operation
+- Common torque-speed plane
+- Loaded cage / Empty cage
 - Moving counterweight
 - Rotation direction
-- Motor torque direction
-- Load torque direction
+- Motor torque (Tm)
+- Load torque (Tl)
 """)
 
 # =========================================================
@@ -50,6 +50,12 @@ placeholder = st.empty()
 
 # =========================================================
 # QUADRANT DATA
+#
+# Layout:
+#
+#   Q2 | Q1
+#   --------
+#   Q3 | Q4
 # =========================================================
 
 quadrants = [
@@ -61,8 +67,8 @@ quadrants = [
         "loaded": False,
         "direction": "down",
         "rotation": "CW",
-        "motor_torque": "←",
-        "load_torque": "→"
+        "motor_torque": "left",
+        "load_torque": "right"
     },
 
     # TOP RIGHT
@@ -72,8 +78,8 @@ quadrants = [
         "loaded": True,
         "direction": "up",
         "rotation": "CW",
-        "motor_torque": "→",
-        "load_torque": "←"
+        "motor_torque": "right",
+        "load_torque": "left"
     },
 
     # BOTTOM LEFT
@@ -83,8 +89,8 @@ quadrants = [
         "loaded": False,
         "direction": "up",
         "rotation": "CCW",
-        "motor_torque": "←",
-        "load_torque": "→"
+        "motor_torque": "left",
+        "load_torque": "right"
     },
 
     # BOTTOM RIGHT
@@ -94,13 +100,14 @@ quadrants = [
         "loaded": True,
         "direction": "down",
         "rotation": "CCW",
-        "motor_torque": "→",
-        "load_torque": "←"
+        "motor_torque": "right",
+        "load_torque": "left"
     }
+
 ]
 
 # =========================================================
-# DRAW HOIST
+# DRAW SINGLE HOIST
 # =========================================================
 
 def draw_hoist(
@@ -153,10 +160,10 @@ def draw_hoist(
 
         arc = patches.Arc(
             (5, 8),
-            1.6,
-            1.6,
-            theta1=30,
-            theta2=300,
+            2,
+            2,
+            theta1=40,
+            theta2=320,
             linewidth=2,
             color='green'
         )
@@ -164,22 +171,24 @@ def draw_hoist(
         ax.add_patch(arc)
 
         ax.arrow(
-            5.7,
-            7.2,
-            -0.01,
-            0.01,
-            head_width=0.15,
-            color='green'
+            5.8,
+            7.0,
+            -0.15,
+            0.05,
+            head_width=0.18,
+            head_length=0.18,
+            fc='green',
+            ec='green'
         )
 
     else:
 
         arc = patches.Arc(
             (5, 8),
-            1.6,
-            1.6,
-            theta1=120,
-            theta2=390,
+            2,
+            2,
+            theta1=220,
+            theta2=140,
             linewidth=2,
             color='purple'
         )
@@ -187,13 +196,95 @@ def draw_hoist(
         ax.add_patch(arc)
 
         ax.arrow(
-            4.3,
-            7.2,
-            0.01,
-            0.01,
-            head_width=0.15,
-            color='purple'
+            4.2,
+            7.0,
+            0.15,
+            0.05,
+            head_width=0.18,
+            head_length=0.18,
+            fc='purple',
+            ec='purple'
         )
+
+    # -----------------------------------------------------
+    # MOTOR TORQUE Tm
+    # -----------------------------------------------------
+
+    if motor_torque == "right":
+
+        ax.arrow(
+            5,
+            9.3,
+            1.0,
+            0,
+            width=0.05,
+            head_width=0.25,
+            head_length=0.25,
+            fc='blue',
+            ec='blue'
+        )
+
+    else:
+
+        ax.arrow(
+            6,
+            9.3,
+            -1.0,
+            0,
+            width=0.05,
+            head_width=0.25,
+            head_length=0.25,
+            fc='blue',
+            ec='blue'
+        )
+
+    ax.text(
+        4.2,
+        9.5,
+        "Tm",
+        fontsize=10,
+        color='blue'
+    )
+
+    # -----------------------------------------------------
+    # LOAD TORQUE Tl
+    # -----------------------------------------------------
+
+    if load_torque == "right":
+
+        ax.arrow(
+            5,
+            6.2,
+            1.0,
+            0,
+            width=0.05,
+            head_width=0.25,
+            head_length=0.25,
+            fc='red',
+            ec='red'
+        )
+
+    else:
+
+        ax.arrow(
+            6,
+            6.2,
+            -1.0,
+            0,
+            width=0.05,
+            head_width=0.25,
+            head_length=0.25,
+            fc='red',
+            ec='red'
+        )
+
+    ax.text(
+        4.2,
+        6.4,
+        "Tl",
+        fontsize=10,
+        color='red'
+    )
 
     # -----------------------------------------------------
     # COUNTERWEIGHT POSITION
@@ -244,9 +335,12 @@ def draw_hoist(
     # -----------------------------------------------------
 
     if loaded:
+
         cage_color = "orange"
         cage_label = "Loaded Cage"
+
     else:
+
         cage_color = "lightblue"
         cage_label = "Empty Cage"
 
@@ -295,26 +389,6 @@ def draw_hoist(
         )
 
     # -----------------------------------------------------
-    # TORQUE DIRECTION
-    # -----------------------------------------------------
-
-    ax.text(
-        0.5,
-        2,
-        f"Motor Torque: {motor_torque}",
-        fontsize=9,
-        color='blue'
-    )
-
-    ax.text(
-        0.5,
-        1.3,
-        f"Load Torque: {load_torque}",
-        fontsize=9,
-        color='brown'
-    )
-
-    # -----------------------------------------------------
     # TITLES
     # -----------------------------------------------------
 
@@ -336,12 +410,12 @@ def draw_hoist(
     ax.axis('off')
 
 # =========================================================
-# DRAW COMMON AXIS
+# COMMON TORQUE-SPEED AXIS
 # =========================================================
 
 def draw_common_axis(fig):
 
-    ax = fig.add_axes([0.38, 0.38, 0.24, 0.24])
+    ax = fig.add_axes([0.39, 0.39, 0.22, 0.22])
 
     ax.axhline(0, color='black', linewidth=2)
     ax.axvline(0, color='black', linewidth=2)
@@ -349,11 +423,11 @@ def draw_common_axis(fig):
     ax.set_xlim(-1, 1)
     ax.set_ylim(-1, 1)
 
-    ax.text(0.8, 0.05, "+T", fontsize=12)
+    ax.text(0.82, 0.05, "+T", fontsize=12)
     ax.text(-0.95, 0.05, "-T", fontsize=12)
 
-    ax.text(0.05, 0.8, "+ω", fontsize=12)
-    ax.text(0.05, -0.9, "-ω", fontsize=12)
+    ax.text(0.05, 0.82, "+ω", fontsize=12)
+    ax.text(0.05, -0.92, "-ω", fontsize=12)
 
     ax.text(0.45, 0.45, "Q1")
     ax.text(-0.65, 0.45, "Q2")
@@ -363,10 +437,13 @@ def draw_common_axis(fig):
     ax.set_xticks([])
     ax.set_yticks([])
 
-    ax.set_title("Torque-Speed Plane", fontsize=10)
+    ax.set_title(
+        "Torque-Speed Plane",
+        fontsize=10
+    )
 
 # =========================================================
-# STATIC DRAW
+# STATIC VIEW
 # =========================================================
 
 def draw_static():
@@ -423,8 +500,11 @@ if st.session_state.run_animation:
         for i, q in enumerate(quadrants):
 
             if q["direction"] == "up":
+
                 cage_y = 2 + (step % 5)
+
             else:
+
                 cage_y = 6 - (step % 5)
 
             draw_hoist(
