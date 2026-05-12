@@ -61,8 +61,8 @@ quadrants = [
         "loaded": False,
         "direction": "down",
         "rotation": "CW",
-        "motor_torque": "left",
-        "load_torque": "right"
+        "motor_torque": "down",
+        "load_torque": "up"
     },
 
     {
@@ -71,8 +71,8 @@ quadrants = [
         "loaded": True,
         "direction": "up",
         "rotation": "CW",
-        "motor_torque": "right",
-        "load_torque": "left"
+        "motor_torque": "up",
+        "load_torque": "down"
     },
 
     {
@@ -81,8 +81,8 @@ quadrants = [
         "loaded": False,
         "direction": "up",
         "rotation": "CCW",
-        "motor_torque": "left",
-        "load_torque": "right"
+        "motor_torque": "down",
+        "load_torque": "up"
     },
 
     {
@@ -91,8 +91,8 @@ quadrants = [
         "loaded": True,
         "direction": "down",
         "rotation": "CCW",
-        "motor_torque": "right",
-        "load_torque": "left"
+        "motor_torque": "up",
+        "load_torque": "down"
     }
 
 ]
@@ -201,27 +201,36 @@ def draw_hoist(
     # MOTOR TORQUE Tm
     # -----------------------------------------------------
 
-    if motor_torque == "right":
+    if motor_torque == "up":
 
         ax.arrow(
-            5,
-            9.3,
-            1.0,
+            7.8,
+            8.8,
             0,
+            1.0,
             width=0.05,
             head_width=0.25,
             head_length=0.25,
             fc='blue',
             ec='blue'
+        )
+
+        ax.text(
+            8.0,
+            9.9,
+            "Tm ↑",
+            fontsize=10,
+            color='blue',
+            weight='bold'
         )
 
     else:
 
         ax.arrow(
-            6,
-            9.3,
-            -1.0,
+            7.8,
+            9.8,
             0,
+            -1.0,
             width=0.05,
             head_width=0.25,
             head_length=0.25,
@@ -229,39 +238,49 @@ def draw_hoist(
             ec='blue'
         )
 
-    ax.text(
-        4.2,
-        9.5,
-        "Tm",
-        fontsize=10,
-        color='blue'
-    )
+        ax.text(
+            8.0,
+            8.4,
+            "Tm ↓",
+            fontsize=10,
+            color='blue',
+            weight='bold'
+        )
 
     # -----------------------------------------------------
     # LOAD TORQUE Tl
     # -----------------------------------------------------
 
-    if load_torque == "right":
+    if load_torque == "up":
 
         ax.arrow(
-            5,
-            6.2,
-            1.0,
+            2.0,
+            5.8,
             0,
+            1.0,
             width=0.05,
             head_width=0.25,
             head_length=0.25,
             fc='red',
             ec='red'
+        )
+
+        ax.text(
+            2.2,
+            6.9,
+            "Tl ↑",
+            fontsize=10,
+            color='red',
+            weight='bold'
         )
 
     else:
 
         ax.arrow(
-            6,
-            6.2,
-            -1.0,
+            2.0,
+            6.8,
             0,
+            -1.0,
             width=0.05,
             head_width=0.25,
             head_length=0.25,
@@ -269,13 +288,14 @@ def draw_hoist(
             ec='red'
         )
 
-    ax.text(
-        4.2,
-        6.4,
-        "Tl",
-        fontsize=10,
-        color='red'
-    )
+        ax.text(
+            2.2,
+            5.4,
+            "Tl ↓",
+            fontsize=10,
+            color='red',
+            weight='bold'
+        )
 
     # -----------------------------------------------------
     # COUNTERWEIGHT POSITION
@@ -357,7 +377,6 @@ def draw_hoist(
 
     if direction == "up":
 
-        # Upward arrow
         ax.arrow(
             8.3,
             cage_y - 0.8,
@@ -381,7 +400,6 @@ def draw_hoist(
 
     else:
 
-        # Downward arrow
         ax.arrow(
             8.3,
             cage_y + 0.8,
@@ -395,7 +413,7 @@ def draw_hoist(
         )
 
         ax.text(
-            8.25,
+            8.2,
             cage_y - 1.3,
             "DOWN",
             fontsize=9,
