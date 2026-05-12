@@ -3,9 +3,9 @@ import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 import time
 
-# ---------------------------------------------------
-# PAGE SETTINGS
-# ---------------------------------------------------
+# =========================================================
+# PAGE CONFIG
+# =========================================================
 
 st.set_page_config(
     page_title="Four Quadrant Hoist Simulation",
@@ -15,26 +15,25 @@ st.set_page_config(
 st.title("⚙️ Four Quadrant Operation of Hoist")
 
 st.markdown("""
-This simulation shows:
-
-- Loaded cage
-- Empty cage
-- Counter weight
-- Motion direction
-- Torque-Speed quadrant
-- Simultaneous four quadrant operation
+### Features
+- Simultaneous 4-quadrant display
+- Moving loaded cage
+- Moving empty cage
+- Moving counterweight
+- Torque-Speed indication
+- Up/Down motion arrows
 """)
 
-# ---------------------------------------------------
+# =========================================================
 # SESSION STATE
-# ---------------------------------------------------
+# =========================================================
 
 if "run_animation" not in st.session_state:
     st.session_state.run_animation = False
 
-# ---------------------------------------------------
+# =========================================================
 # BUTTONS
-# ---------------------------------------------------
+# =========================================================
 
 col1, col2 = st.columns(2)
 
@@ -46,17 +45,17 @@ with col2:
     if st.button("⏹ Stop Animation"):
         st.session_state.run_animation = False
 
-# Placeholder for animation
 placeholder = st.empty()
 
-# ---------------------------------------------------
+# =========================================================
 # QUADRANT DATA
-# Correct Layout:
 #
-#  Q2 | Q1
-#  --------
-#  Q3 | Q4
-# ---------------------------------------------------
+# Layout:
+#
+#   Q2 | Q1
+#   --------
+#   Q3 | Q4
+# =========================================================
 
 quadrants = [
 
@@ -98,9 +97,9 @@ quadrants = [
 
 ]
 
-# ---------------------------------------------------
+# =========================================================
 # DRAW FUNCTION
-# ---------------------------------------------------
+# =========================================================
 
 def draw_single_hoist(
     ax,
@@ -113,13 +112,16 @@ def draw_single_hoist(
     speed
 ):
 
-    # Axis Limits
+    # -----------------------------------------------------
+    # AXIS LIMITS
+    # -----------------------------------------------------
+
     ax.set_xlim(0, 10)
     ax.set_ylim(0, 10)
 
-    # ------------------------------------------------
-    # OUTER BORDER
-    # ------------------------------------------------
+    # -----------------------------------------------------
+    # BORDER
+    # -----------------------------------------------------
 
     border = patches.Rectangle(
         (0, 0),
@@ -131,9 +133,9 @@ def draw_single_hoist(
 
     ax.add_patch(border)
 
-    # ------------------------------------------------
+    # -----------------------------------------------------
     # TORQUE-SPEED AXES
-    # ------------------------------------------------
+    # -----------------------------------------------------
 
     # Torque Axis
     ax.arrow(
@@ -160,13 +162,13 @@ def draw_single_hoist(
     )
 
     # Axis Labels
-    ax.text(3.2, 0.8, "Torque", fontsize=9)
-    ax.text(0.6, 3.3, "Speed", fontsize=9)
+    ax.text(3.1, 0.7, "Torque", fontsize=9)
+    ax.text(0.4, 3.1, "Speed", fontsize=9)
 
-    # Sign Labels
+    # Signs
     ax.text(
         2.2,
-        1.5,
+        1.4,
         torque,
         fontsize=12,
         weight='bold'
@@ -174,15 +176,15 @@ def draw_single_hoist(
 
     ax.text(
         1.2,
-        2.5,
+        2.3,
         speed,
         fontsize=12,
         weight='bold'
     )
 
-    # ------------------------------------------------
+    # -----------------------------------------------------
     # PULLEY
-    # ------------------------------------------------
+    # -----------------------------------------------------
 
     pulley = patches.Circle(
         (5, 8),
@@ -193,14 +195,21 @@ def draw_single_hoist(
 
     ax.add_patch(pulley)
 
-    # ------------------------------------------------
+    # -----------------------------------------------------
+    # COUNTERWEIGHT POSITION
+    # Counterweight moves opposite to cage
+    # -----------------------------------------------------
+
+    counter_y = 10 - cage_y
+
+    # -----------------------------------------------------
     # ROPE
-    # ------------------------------------------------
+    # -----------------------------------------------------
 
     # Left Rope
     ax.plot(
         [4, 4],
-        [8, 3],
+        [8, counter_y + 1.3],
         linewidth=3,
         color='black'
     )
@@ -213,12 +222,12 @@ def draw_single_hoist(
         color='black'
     )
 
-    # ------------------------------------------------
-    # COUNTER WEIGHT
-    # ------------------------------------------------
+    # -----------------------------------------------------
+    # COUNTERWEIGHT
+    # -----------------------------------------------------
 
     counter_weight = patches.Rectangle(
-        (3.2, 2),
+        (3.2, counter_y),
         1.5,
         1.3,
         facecolor='gray'
@@ -227,15 +236,15 @@ def draw_single_hoist(
     ax.add_patch(counter_weight)
 
     ax.text(
-        2.2,
-        1.4,
+        1.6,
+        counter_y + 0.2,
         "Counter\nWeight",
         fontsize=8
     )
 
-    # ------------------------------------------------
+    # -----------------------------------------------------
     # CAGE
-    # ------------------------------------------------
+    # -----------------------------------------------------
 
     if loaded:
 
@@ -256,17 +265,16 @@ def draw_single_hoist(
 
     ax.add_patch(cage)
 
-    # Cage Label
     ax.text(
         6.9,
-        cage_y - 0.3,
+        cage_y - 0.2,
         cage_label,
         fontsize=8
     )
 
-    # ------------------------------------------------
+    # -----------------------------------------------------
     # DIRECTION ARROW
-    # ------------------------------------------------
+    # -----------------------------------------------------
 
     if direction == "up":
 
@@ -292,9 +300,9 @@ def draw_single_hoist(
             color='red'
         )
 
-    # ------------------------------------------------
+    # -----------------------------------------------------
     # TITLES
-    # ------------------------------------------------
+    # -----------------------------------------------------
 
     ax.text(
         0.5,
@@ -311,13 +319,13 @@ def draw_single_hoist(
         fontsize=10
     )
 
-    # Remove axis
+    # Remove axes
     ax.axis('off')
 
 
-# ---------------------------------------------------
+# =========================================================
 # STATIC VIEW
-# ---------------------------------------------------
+# =========================================================
 
 def draw_static():
 
@@ -348,16 +356,14 @@ def draw_static():
 
     plt.close(fig)
 
-
-# ---------------------------------------------------
+# =========================================================
 # ANIMATION
-# ---------------------------------------------------
+# =========================================================
 
 if st.session_state.run_animation:
 
     for step in range(100):
 
-        # Stop button pressed
         if not st.session_state.run_animation:
             break
 
@@ -371,12 +377,12 @@ if st.session_state.run_animation:
 
         for i, q in enumerate(quadrants):
 
-            # UP motion
+            # Upward motion
             if q["direction"] == "up":
 
                 cage_y = 2 + (step % 5)
 
-            # DOWN motion
+            # Downward motion
             else:
 
                 cage_y = 6 - (step % 5)
@@ -396,7 +402,6 @@ if st.session_state.run_animation:
 
         placeholder.pyplot(fig)
 
-        # IMPORTANT
         plt.close(fig)
 
         time.sleep(0.4)
