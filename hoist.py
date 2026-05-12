@@ -23,6 +23,7 @@ st.markdown("""
 - Rotation direction
 - Motor torque (Tm)
 - Load torque (Tl)
+- Upward/Downward motion arrows
 """)
 
 # =========================================================
@@ -50,17 +51,10 @@ placeholder = st.empty()
 
 # =========================================================
 # QUADRANT DATA
-#
-# Layout:
-#
-#   Q2 | Q1
-#   --------
-#   Q3 | Q4
 # =========================================================
 
 quadrants = [
 
-    # TOP LEFT
     {
         "title": "Quadrant II",
         "mode": "Forward Braking",
@@ -71,7 +65,6 @@ quadrants = [
         "load_torque": "right"
     },
 
-    # TOP RIGHT
     {
         "title": "Quadrant I",
         "mode": "Forward Motoring",
@@ -82,7 +75,6 @@ quadrants = [
         "load_torque": "left"
     },
 
-    # BOTTOM LEFT
     {
         "title": "Quadrant III",
         "mode": "Reverse Motoring",
@@ -93,7 +85,6 @@ quadrants = [
         "load_torque": "right"
     },
 
-    # BOTTOM RIGHT
     {
         "title": "Quadrant IV",
         "mode": "Reverse Braking",
@@ -324,7 +315,7 @@ def draw_hoist(
     ax.add_patch(counter)
 
     ax.text(
-        1.5,
+        1.4,
         counter_y + 0.2,
         "Counter\nWeight",
         fontsize=8
@@ -366,26 +357,50 @@ def draw_hoist(
 
     if direction == "up":
 
+        # Upward arrow
         ax.arrow(
-            8,
-            cage_y - 0.5,
+            8.3,
+            cage_y - 0.8,
             0,
-            1,
+            1.2,
             width=0.08,
             head_width=0.35,
-            color='green'
+            head_length=0.25,
+            fc='green',
+            ec='green'
+        )
+
+        ax.text(
+            8.45,
+            cage_y + 0.6,
+            "UP",
+            fontsize=9,
+            color='green',
+            weight='bold'
         )
 
     else:
 
+        # Downward arrow
         ax.arrow(
-            8,
-            cage_y + 0.5,
+            8.3,
+            cage_y + 0.8,
             0,
-            -1,
+            -1.2,
             width=0.08,
             head_width=0.35,
-            color='red'
+            head_length=0.25,
+            fc='red',
+            ec='red'
+        )
+
+        ax.text(
+            8.25,
+            cage_y - 1.3,
+            "DOWN",
+            fontsize=9,
+            color='red',
+            weight='bold'
         )
 
     # -----------------------------------------------------
